@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS Detector</title>
+    <link rel="stylesheet"  href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+<body>
+
+<div class="container">
+    <h1>CMS Detection and CVE Scanner</h1>
+    <form method="POST" onsubmit="showLoader()">
+        <input type="text" name="url" placeholder="Enter website URL" required>
+        <button type="submit">Scan</button>
+    </form>
+
+    <div class="loader-container" id="loader-container">
+        <div class="loader-bar">
+            <div></div>
+        </div>
+        <p>Scanning, please wait...</p>
+    </div>
+
+    {% if cms_name %}
+    <div class="result">
+        <h2>Results for {{ url }}</h2>
+        <p><strong>CMS Detected:</strong> {{ cms_name }}</p>
+        <p><strong>Version:</strong> {{ version }}</p>
+
+        <h3>Known CVEs:</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>CVE ID</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if cve_list %}
+                    {% for item in cve_list %}
+                    <tr>
+                        <td>{{ item[0] }}</td>
+                        <td>{{ item[1] }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="2">No CVEs found for this CMS version.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function showLoader() {
+    document.getElementById('loader-container').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
